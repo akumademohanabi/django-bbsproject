@@ -23,8 +23,11 @@ class CreateView(LoginRequiredMixin, generic.edit.CreateView):
     model = Article
     template_name = 'bbs/create.html'
     fields = ['content']    # 項目をcontentのみに変更
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(CreateView, self).form_valid(form)
     
-    # dispatchメソッドで権限チェックを追加
    
 # UpdateViewクラスを作成
 # 投稿編集はログインしているユーザーのみ
@@ -41,10 +44,7 @@ class UpdateView(LoginRequiredMixin, generic.edit.UpdateView):
             raise PermissionDenied('編集権限がありません。')
         # 親クラスのdispatchを呼び出して通常の処理を継続
         return super(UpdateView, self).dispatch(request, *args, **kwargs)    
-    # 格納する値をチェック
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super(CreateView, self).form_valid(form)
+
 
     
 # DeleteViewクラスを作成
