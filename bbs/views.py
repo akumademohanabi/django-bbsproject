@@ -25,6 +25,14 @@ class CreateView(LoginRequiredMixin, generic.edit.CreateView):
     fields = ['content']    # 項目をcontentのみに変更
     
     # dispatchメソッドで権限チェックを追加
+   
+# UpdateViewクラスを作成
+# 投稿編集はログインしているユーザーのみ
+class UpdateView(LoginRequiredMixin, generic.edit.UpdateView):
+    model = Article
+    template_name = 'bbs/create.html'
+    fields = '__all__'
+
     def dispatch(self, request, *args, **kwargs):
         # 編集対象の投稿オブジェクトを取得
         obj = self.get_object()
@@ -38,12 +46,6 @@ class CreateView(LoginRequiredMixin, generic.edit.CreateView):
         form.instance.author = self.request.user
         return super(CreateView, self).form_valid(form)
 
-# UpdateViewクラスを作成
-# 投稿編集はログインしているユーザーのみ
-class UpdateView(LoginRequiredMixin, generic.edit.UpdateView):
-    model = Article
-    template_name = 'bbs/create.html'
-    fields = '__all__'
     
 # DeleteViewクラスを作成
 # 投稿削除はログインしているユーザーのみ
